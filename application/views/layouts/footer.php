@@ -862,7 +862,10 @@ function saveCompanyHandler(){$('.ch_drop_title').css('background','#7fe3d5');$(
             $('#start_date').datetimepicker();
             $('#end_date').datetimepicker();
             $('#planned_at').datetimepicker();
+      
             $('.planned_at').datetimepicker();
+           $('#pra_weekending').datetimepicker();
+           $('.weekending').datetimepicker();
             $('#actioned_at').datetimepicker();
             $('.button-checkbox').each(function () {
             // Settings

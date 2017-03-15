@@ -140,13 +140,14 @@ function get_actions_completed($company_id)
     $data = array(
         'a.company_id' => $company_id,
         );
-  $sql = "SELECT  a.created_at, a.actioned_at, a.action_type_id, com.initial_rate, a.comments, a.cancelled_at, a.campaign_id, a.outcome, a.id, u.image, u.name, c.first_name, c.last_name, a.contact_id, a.followup_action_id, a.tfer_turnover, a.tfer_runners, a.initial_fee, a.planned_at,T1.updated_at outcome_action_date,
+  $sql = "SELECT  adj.currency,adj.remittance_id, a.created_at, a.actioned_at, a.action_type_id, com.initial_rate, a.comments, a.cancelled_at, a.campaign_id, a.outcome, a.id, u.image, u.name, c.first_name, c.last_name, a.contact_id, a.followup_action_id, a.tfer_turnover, a.tfer_runners, a.initial_fee, a.planned_at,T1.updated_at outcome_action_date,
  CASE when a.created_by = T1.updated_by then null else T1.peep END originalcreator,
   CASE when a.created_by = T2.updated_by then null else T2.peep END creater
 FROM actions a
 LEFT JOIN contacts c ON c.id = a.contact_id
 LEFT JOIN users u ON a.user_id = u.id
 LEFT JOIN companies com ON a.company_id = com.id
+LEFT JOIN adjustments adj ON a.id = adj.action_id
 
 LEFT JOIN (select cb.id,cb.user_id, cb.updated_by,cb.updated_at, u.name as peep from actions cb LEFT JOIN users u on cb.updated_by = u.id where company_id=".$company_id.") T1
 ON a.id = T1.id
@@ -884,7 +885,36 @@ function create($post, $userid =false)
         );
     $query = $this->db->insert('actions', $completeddata);
     //END TEST
-    }
+    
+
+if($post['action_type_completed'] == 43){
+ 
+    $adjustments  = array("company_id" =>   $post['company_id'],
+               "created_at" => date('Y-m-d H:i:s'),
+               "created_by" => $userid ? $userid : $post['user_id'],
+               "action_id" => $this->db->insert_id(),
+               "adjustment_type_id" =>$post['adjustment_type_id'],
+               "invoice_id" => (!isset($post['invoice_id'])?$post['invoice_id']:NULL),
+               "remittance_id" => (!isset($post['remittance_id'])?$post['remittance_id']:NULL),
+               "currency" =>$post['currency'],
+               "name" => (isset($post['cc_name'])?$post['cc_name']:NULL),
+               "candidate" => (isset($post['candidate'])?$post['candidate']:NULL),
+               "client" => (isset($post['client'])?$post['client']:NULL),
+               "weekending" =>date('Y-m-d H:i:s'),
+               "adjustment_amount" => $post['adjustment_amount'],
+               "reason" => (isset($post['reason'])?$post['reason']:NULL),
+               "change_details" =>(isset($post['change_details'])?$post['change_details']:NULL)
+
+               );   
+    
+                $query = $this->db->insert('adjustments', $adjustments);
+        }
+
+
+
+
+
+}
     
     if ($post['action_type_planned']>0) {
         
@@ -1487,6 +1517,37 @@ AND ct.tag_id in (200,201,202)
            $query = $this->db->query($sql);
            return $query->result_array()?  $query->result_array() : '';
 
+    }
+    
+    function update_adjustments($post, $userid){
+
+            $adjustments  = array(
+              
+               "updated_by" => $userid,
+               "updated_at" => date('Y-m-d H:i:s'),
+               "adjustment_type_id" =>$post['adjustment_type_id'],
+               "invoice_id" => (isset($post['invoice_id'])?$post['invoice_id']:NULL),
+               "remittance_id" => (isset($post['remittance_id'])?$post['remittance_id']:NULL),
+               "currency" =>$post['currency'],
+               "name" => (isset($post['cc_name'])?$post['cc_name']:NULL),
+               "candidate" => (isset($post['candidate'])?$post['candidate']:NULL),
+               "client" => (isset($post['f_client'])?$post['f_client']:NULL),
+               "weekending" =>date('Y-m-d H:i:s'),
+               "adjustment_amount" => $post['adjustment_amount'],
+               "reason" => (isset($post['reason'])?$post['reason']:NULL),
+               "change_details" =>(isset($post['change_details'])?$post['change_details']:NULL)
+
+            );   
+    
+                 
+
+       
+        
+        $this->db->where('action_id', $post['action_id']);
+        $this->db->update('adjustments', $adjustments);
+        
+        return true;
+        
     }
     
     

@@ -26,6 +26,9 @@ class Actions extends MY_Controller {
 	public function create()
     {
         
+        
+     //print_r('<pre>');print_r($this->input->post());print_r('</pre>'); exit();
+      
         /*
         
          $post = $this->input->post();
@@ -299,7 +302,10 @@ foreach($userfilename as $key => $value){
     
     public function edit()
     {
-		if($this->input->post('action_id'))
+		
+
+
+if($this->input->post('action_id'))
 		{
 			if($this->input->post('action_do') == 'completed')
 			{   
@@ -487,19 +493,18 @@ foreach($userfilename as $key => $value){
     }
 
     
-    //////////////AZURE////
     
-     public function azure_list_files_tester (){
- 
-    // $this->load->library('Azure');
-   
-      //list_files();
-     
-     //force_download('$nme',  getfile());
-     
- }
     
-    /////////////=END///////////////////
+function adjustments(){
+    
+    //echo 'Yes';
+    
+  $this->Actions_model->update_adjustments($this->input->post(),$this->data['current_user']['id']);  
+    
+    echo json_encode(array('success' => 'ok'));
+    
+    
+}
  
     
 }

@@ -188,7 +188,10 @@ function getActionData(scope = false){ //get all actions in multidimentional jso
                 bindPillerTitles();
                 removeOutsandingAction();
                 mainMenuQty(scope);
-                comments_decoder()
+                comments_decoder();
+                
+                  adjustment_process_timeline();
+                 //  adjustment_set_required();
 
                 //$('.follow-up-date').datepicker();
                 var dateToday = new Date();
@@ -360,7 +363,9 @@ function writeactions(data, scope = false){
      });  //loop end
        actionresult = actionresult.join("");
 comments_decoder()
-           return actionresult;         
+           return actionresult;  
+    
+   
 
 }
     function callbackActionTextBox(){
@@ -1092,6 +1097,7 @@ $('#sidebar').hide();
             })
             
         updateDateTime();
+          adjustments_process();
          }
     (function($) {
         $.fn.goTo = function() {
@@ -1274,7 +1280,7 @@ function actionProcessor(actionType = 0 ,action = 0 ,icon = 0,initial_fee,pipeli
          var tfer_runners ;
         var tfer_turnover;
         var  createfollowername;
-
+var editAdjustment;
          var filename = [];
       var originalcreator;
          
@@ -1350,7 +1356,15 @@ function actionProcessor(actionType = 0 ,action = 0 ,icon = 0,initial_fee,pipeli
          }
 
 
-         
+         if(actionType == 'Adjustments'){
+            
+            tagline = '<form action="actions/adjustments" data="'+action['id']+'" id="adjformid'+action['id']+'"  class="adjform"><div class="adjcontactions adjcont'+action['id']+'" data="'+action['id']+'" style="height: 300px;"><div class="col-sm-8"> <div class="form-group"> <label>Adjustment</label> <select name="adjustment_type_id" class="form-control  adjustmentSelectordefaultaction" title="Choose one of the following..." data="'+action['id']+'"> <option value="1" >Charge Only</option> <option value="2" '+(action['id'] ? 'selected="selected"' : "" )+'>Pay &amp; Charge</option> <option value="3">Client VAT Adjustment</option> <option value="4">Pay Rate Adjustment</option> <option value="5">Agency VAT Adjustment</option> <option value="6">Contractor VAT Adjustment</option> <option value="7">Change of Supplier</option> </select> </div> </div> <div class="col-sm-4 "> <div class="form-group"> <label>Status</label> <select class="form-control"  placeholder="Adjustment"> <option ="0">Open</option> <option ="1">Close</option> </select> </div> </div> <div class="col-sm-4 adj'+action['id']+' group1"> <div class="form-group"> <label>Client Name<span class="">*</span></label> <input name="cc_name" type="text" class="form-control selectpicker rqd_group1 name" id="name" placeholder="Client name"> </div> </div> <div class="col-sm-4 adj'+action['id']+' group2"> <div class="form-group"> <label>Candidate<span class="">*</span></label> <input type="text" class="form-control selectpicker candidate rqd_group2 candidate_adjustment" name="candidate" id="pra_candidate_adjustment" placeholder="Candidiate name"> </div> </div> <div class="col-sm-4 adj'+action['id']+' group2"> <div class="form-group"> <label>Client<span class="">*</span></label> <input type="text" class="form-control  client rqd_group2 client_adjustment" id="f_client" name="f_client" placeholder="Client name"> </div> </div> <div class="col-sm-4 adj'+action['id']+' group1"> <div class="form-group"> <label>Invoice number<span class="">*</span></label> <input type="number" name="invoice_id" class="form-control invoice_number rqd_group1" id="invoice_id" placeholder="Invoice number"> </div> </div> <div class="col-sm-4 adj'+action['id']+' group1"> <div class="form-group"> <label>Remittance number<span class="">*</span></label> <input type="number" name="remittance_id" class="form-control remittance_number rqd_group1" id="remittance_id" placeholder="Remittance number" value="'+action['remittance_id']+'"> </div> </div> <div class="col-sm-2 adj'+action['id']+' group2"> <div class="form-group"> <label>Week Ending<span class="">*</span></label> <input type="text" class="form-control weekending weekending rqd_group2" id="weekending" name="weekending" data-date-format="DD/MM/YYYY" placeholder="Select date"> </div> </div> <div class="col-sm-4 adj'+action['id']+' group_default"> <div class="form-group"> <label>Currency<span class="">*</span></label> </div> <div class="form-group" style="margin-top:-12px"> <label class="radio-inline"><input name="currency" class="selectpicker client_currency rqd_group_default" type="radio" checked="checked" value="GBP"> Sterling</label> <label class="radio-inline"><input name="currency" class="selectpicker client_currency rqd_group_default" type="radio" value="EUR"> Euros</label> <label class="radio-inline "><input name="currency" class=" client_currency rqd_group_default" type="radio" value="USD"> Dollars</label> </div> </div> <div class="col-sm-4 adj'+action['id']+' group_default"> <div class="form-group"> <label>Amount of Adjustment<span class="">*</span></label> <input type="number" name="adjustment_amount" class="form-control adjustment_amount rqd_group2"   placeholder="Adjustment amount"> </div> </div> <div class="col-sm-3 adj group_default"> <div class="form-group"> <label>Reason<span class="">*</span></label> <select class="form-control selectpicker contractvatreason adjrqd6 reason" name="reason" title="Select a reason..."> <option value="">--- Select a Reason ---</option> <option value="1">Agency provided incorrect information (e.g. rates)</option> <option value="2">Placement error</option> <option value="3">Timesheet error</option> <option value="4">Credit Control - incorrect adjustment</option> <option value="5">Credit Control - customer billing incorrect</option> <option value="6">Other</option> </select> </div> </div> <div class="col-sm-12 adj'+action['id']+' group_default"> <div class="form-group"> <label>Details of Change<span class="">*</span></label> <textarea type="text" name="change_details" class="form-control selectpicker rqd_group_default change_details" id="change_details" placeholder="Change details"></textarea><input type="hidden"><input type="hidden" name="action_id" value="'+action['id']+'"><input type="submit" id="adjsub'+action['id']+'" class="adjsubmit" data="'+action['id']+'" style="display:none;"> </div> </div></div></form>';
+            
+             
+             editAdjustment = '<span class="btn btn-warning btn-xs btn-primary adj_action_btn_edit adj_action_btn_edit'+action['id']+'   hint--top-right"data-hint="Edit" data="'+action['id']+
+                 '">Edit</span><span class="btn btn-primary btn-xs btn-primary adj_action_btn_save adj_action_btn_save'+action['id']+'   hint--top-right"data-hint="Update Adjustment" data="'+action['id']+'">Save</span> <span class="btn btn-danger btn-xs btn-primary adj_action_btn_cancel adj_action_btn_cancel'+action['id']+'  hint--top-right"data-hint="Cancel" data="'+action['id']+
+                 '">Cancel</span>';
+         }
          if(actionType == 'Pipeline - Deal'){ 
              
            
@@ -1467,7 +1481,7 @@ var updatemeeting   = '<span  class="datechangerTrigger"><input type="text"  dat
         //console.log('box_'+action['action_id'])
             
             
-        
+       
 //var tm  = action['planned_at'];
  
 
@@ -1595,13 +1609,20 @@ if(tm > 1){ tm = tm + ' Days Overdue'; }else if(tm == 1){ tm  = tm + ' Day Overd
       }  
         
        
-      if(actionTypeName != 'Pipeline Update')   
-            actions  ='<div class="timeline-entry actionId'+actionType+'  '+classCompleted+' pillid'+actionId+'" pillid='+actionId+'> <div class="timeline-stat"> '+icon+'</div><div class="timeline-label"> <div class="mar-no pad-btm"><h4 class="mar-no pad-btm">'+header+deal+'  </h4><div class="actions-info" ><span class="label label-warning"  >'+planned_at+'</span>'+kpStr+ ' '+overdueStatus+ ' '+updatemeeting+contactName+filename+' <span class="classActions" style="float:right; margin-top:0; margin-left:3px;">'+calenderbtn+outcomeRemove+followupAlert+'</span></div></div><div class="mic-info"> '+status+': '+createfollowername+created_by+' - '+formattDate(createdAt, true)+' </div> <div class="actionMsgText">'+turnover+''+tagline+' </div>'+textbox+ ' </div></div>';
+      if(actionTypeName != 'Pipeline Update'  )   
+            actions  ='<div class="timeline-entry actionId'+actionType+'  '+classCompleted+' pillid'+actionId+'" pillid='+actionId+'> <div class="timeline-stat"> '+icon+'</div><div class="timeline-label"> <div class="mar-no pad-btm"><h4 class="mar-no pad-btm">'+header+deal+'  </h4><div class="actions-info" ><span class="label label-warning"  >'+planned_at+'</span>'+kpStr+ ' '+overdueStatus+ ' '+updatemeeting+contactName+filename+' <span class="classActions" style="float:right; margin-top:0; margin-left:3px;">'+calenderbtn+outcomeRemove+followupAlert+editAdjustment+'</span></div></div><div class="mic-info"> '+status+': '+createfollowername+created_by+' - '+formattDate(createdAt, true)+' </div> <div class="actionMsgText">'+turnover+''+tagline+' </div>'+textbox+ ' </div></div>';
          
         if(actionTypeName == 'Pipeline Update' ){
               actions  = '<div class="timeline-entry actionId'+actionType+' '+classCompleted+'" > <div class="timeline-stat"> '+icon+'</div> <div class="timeline-label pipe" style="margin-bottom: 50px;"> <div class="mar-no pad-btm" ><h4 class="mar-no pad-btm">'+header+' <span class="classActions" style="margin-top:0; margin-left:3px; float:right;">'+calenderbtn+outcomeRemove+'</span></h4>' +kpStr+overdueStatus+'</div><div class="actionMsgText">'+action['comments']+'</div> </div>';
          }
      
+         
+         if(actionType == 'Adjustments'){
+             
+            // actions = adjustments;
+             
+         }
+         
         return actions;
        }
 

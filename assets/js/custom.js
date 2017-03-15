@@ -12,6 +12,11 @@ function dateRequired()     {
   
 $( document ).ready(function() {
     
+   // $('.adj').hide();
+    adjustments_process();
+    
+    
+    
 $('.comp_details_edit_btn').click(function(){
  
  confidentialHandler();
@@ -46,7 +51,7 @@ $('.updatepassword').toggle(function(){
 
 
 })
-    
+   
     
       $('.updatepasswordinput').keyup(function(){
         
@@ -344,7 +349,28 @@ $(window).load(function(){
     }, 2000);
 });
 $('#action_type_completed').change(function(){
+    $('.completed-details').attr('required', 'required') ;
+     $('.adj,.group1,.group2').removeAttr('required');
          $('.action_verbiage').hide();
+    $('.actionsdefault').show();
+ ///ADJUSTMENTS///
+
+  $('.adj input,.adj div ,.adj select').removeAttr('required');
+$('.multifileremover').parent().parent().remove();
+    
+$('.action_file_uploader input').val('');
+$('.action_file_uploader').hide();
+    
+    
+ $('select[name=adjustment_type_id]').val(0);
+$('.selectpicker').selectpicker('refresh');
+     $(".editorAction").html('');
+         $('.action_verbiage').hide();  
+    
+    
+     $('.adjustmentSelectordefault').hide();
+    $('.adjcont1 .adj').hide();
+     ///ADJUSTMENTS///
     $('.mainUploader input').prop('required', false);
         var action_verbiage_text = $(this).val();
 
@@ -454,7 +480,7 @@ if ((this.value == '16' || this.value == '8' || this.value == '32') && (!source_
        
     }
     
-    
+   
     
     $(".sourceRequiredTitle").html(sourceRequiredTitle);
      $('#action-error .editBoxInstruction').html(check);
@@ -467,6 +493,7 @@ if ((this.value == '16' || this.value == '8' || this.value == '32') && (!source_
     //$(".disable_no_source").attr('disabled', 'disabled');
     }
         else if(this.value == '42'){
+             $('select[name=adjustmentSelector]').val(0);
          $('#add_action .disable_no_source').prop('disabled', '') ;
        $('.action_file_uploader').show();
             $('.addActionOutcome').show();
@@ -474,7 +501,21 @@ if ((this.value == '16' || this.value == '8' || this.value == '32') && (!source_
             $('.mainUploader input').attr('required', 'required');
         
          
-    }else{
+    }else if(this.value == '43' ){
+            
+            $(".addActionOutcome").hide();
+            $('.adjustmentSelectordefault').show();
+            $('.actionsdefault').hide();
+            $('select[name=contractreason]').val(0);
+            $('.selectpicker').selectpicker('refresh')
+            $('#add_action .disable_no_source').prop('disabled', true);
+/*
+$(".addActionOutcome").hide();
+$(".editorAction").html('..');
+*/
+         
+         
+     }else{
     
         $(".no-source").slideUp(600);
 
@@ -671,8 +712,6 @@ $(".pipeline-validation-check").change(function() {
                 $('.myevergreenaddcompanies').show();
                 
                    }
-             
-                   
 
  }
     
@@ -1052,12 +1091,6 @@ var username  =  [];
 
  
         
-        
-        
-        
-      
-        
-        
        $('.emailegagement').hover(function(){
         
 
@@ -1257,7 +1290,7 @@ if(!$(this).hasClass('requested') && $(this).attr('aria-controls') ==  'emailega
             $('.initialfee').hide();
          
             $('.actionContact').show();
-             $('.onwhocontacthide').show();
+             //$('.onwhocontacthide').show();
         }
 
     })
@@ -1268,10 +1301,320 @@ if(!$(this).hasClass('requested') && $(this).attr('aria-controls') ==  'emailega
 
 
 
- function addActionMultipleFileFields(){
+ 
+function adjustments_process(){
+
+///ADJUSTMENTS///
+
+
+  $('#add_action .disable_no_source').prop('disabled', false);
+    
+    $('.adjcont1 .adjustmentSelector').on('change',function(){
+
+
+//alert($(this).attr('data'))
+
+ var  cont = '.adjcont'+$(this).attr('data')+' ';
+
+        
+         $(cont+'.adj').show();
+          $('.adj'+cont).show();
+        $(cont+".editorAction").html('..');
+        $(cont+'select[name=reason]').val(0);
+       // $('select[name=cva_client_reason]').val(0);
+        $(cont+'select[name=currency]').val(1);
+        //$('select[name=ava_contract_currency]').val(1);
+        $(".addActionOutcome").hide();
+       
+       
+        $('.completed-details').removeAttr('required');
+        
+        $(cont+'input:radio[name="currency"]').attr('checked', false);
+        
+        
+        
+   
+        $(cont+'.adj input,.adj div ,.adj select').removeAttr('required');
+        $(cont+'.completed-details').removeAttr('required') 
+
+   //var resetvalues =      $('.adj1 input,.adj3 input,.adj4 input,.adj6 input,#pc_adjustment_amount,#pc_change_details,#ava_adjustment_amount,#ava_detail_of_change');
+            
+           // resetvalues.val('');
+        
+        
+        
+
+
+ $(cont+'.updatepasswordinput').removeAttr('required');  $(cont+'.updatepasswordinput').attr('required', 'required');
+
+        $(cont+'input:radio[name="currency"],' +cont+'input:radio[name="ava_contract_currency"]').attr('checked', false);
+        $(cont+"input[name=currency]," +cont+"input[name=currency]").val(['GBP']);
+        
+        
+        $(cont+'.selectpicker').selectpicker('refresh');
+       
+        var adjNumber  = $(this).val();
+        
+        
+        
+        
+        
+        
+ 
+        if(adjNumber){
+            $('#add_action .disable_no_source').prop('disabled', false);
+           // $('.adjrqd'+adjNumber+'').attr('required', 'required');
+        }else{
+           // $('#add_action .disable_no_source').prop('disabled', true);
+            $(cont+'.adj').show();
+        }
+
+        if(adjNumber){
+            //console.log(adjNumber);
+            $(cont+'.adj, '+cont+'.group1, ' +cont+'.group2').hide();
+            $(cont+'.adj, '+cont+'.group1, ' +cont+'.group2').removeAttr('required');
+
+        if((adjNumber <= 3)) $(cont+'.group_default, '+cont+'.group1').show() + $(cont+'.rqd_group_default, '+cont+'.rqd_group1').attr('required', 'required') + $(cont+'.weekending').val('');
+        if((adjNumber >= 4)) $(cont+'.group_default, '+cont+'.group2').show() + $(cont+'.rqd_group_default, '+cont+'.rqd_group2').attr('required', 'required');
+        }
+    })
+
+
+    $('.vatreason, .contractvatreason').on('change',function(){
+var  cont = '.adjcont'+$(this).attr('data')+' ';
+        var showbox
+
+        var adjNumber  = $(this).val();
+
+ $('.completed-details').removeAttr('required');
+         if(adjNumber){
+        //console.log(adjNumber);
+        // $('.adj'+adjNumber+'').show();
+        //$(".addActionOutcome").hide();  $('.completed-details').attr('required', 'required')
+        $(".editorAction").html('');
+        if(adjNumber == 6)  showbox = true;
+        showbox ? $(".addActionOutcome").show() + $('.completed-details').attr('required', 'required') : $(".addActionOutcome").hide();
+         }
+
+    })
+
+
+
+    $('.vatreason').on('change',function(){
+
+        var showbox
+        var adjNumber  = $(this).val();
+        if(adjNumber){
+            $(".editorAction").html('dam it man');
+
+            if(adjNumber == 6)  showbox = true;
+
+                showbox ? $(".addActionOutcome").show() : $(".addActionOutcome").hide();
+
+             }else{
+                 $(".addActionOutcome").hide();
+                 $(".editorAction").html('');
+             }
+        
+       
+        
+     })
+
+//ADJUSTMENTS END//
+    
+
+
+
+}
+
+function adjustment_process_timeline(){
+    
+    //adjustment_set_required()
+    $('.adj_action_btn_cancel,.adj_action_btn_save').toggle(false);
+
+$('.adj_action_btn_edit').on('click', function(){
+
+var editid  = $(this).attr('data');
+	$('.adj_action_btn_cancel'+editid+', .adj_action_btn_save'+editid).toggle(true);
+	$('.adj_action_btn_edit'+editid).toggle(false);
+ 
+})
+
+$('.adj_action_btn_cancel').on('click', function(){
+
+var cancelid  = $(this).attr('data');
+	$('.adj_action_btn_cancel'+cancelid+', .adj_action_btn_save'+cancelid).toggle(false);
+	$('.adj_action_btn_edit'+cancelid).toggle(true);
+ 
+})
     
     
-      $('#addActionMultipleFileFields').append('<div class="col-sm-4 col-md-8 col-md-push-4 alert alert-info alert-dismissable  "><div class="col-md-8 "><input type="text" name="userfilename[]" required="required" class="form-control" placeholder="Please name your file" style="margin-top:-7px; text-transform:capitalize;"></div><div class="col-xs-4 col-sm-3 col-md-3 col-lg-3"><input type="file" name="userfile[]" id="userfile" required="required" size="20" /> </div> <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><button type="button" class="btn btn-warning btn-xs multifileremover">Remove</button></div></div>');
+$('.adjustmentSelectordefaultaction').on('change',function(){
+
+var  cont = '.adjcont'+$(this).attr('data')+' ';
+ //adjustment_set_required()
+        
+         $(cont+'.adj').show();
+          $('.adj'+cont).show();
+        $(cont+".editorAction").html('..');
+        $(cont+'select[name=reason]').val(0);
+       // $('select[name=cva_client_reason]').val(0);
+        $(cont+'select[name=currency]').val(1);
+        //$('select[name=ava_contract_currency]').val(1);
+       // $(".addActionOutcome").hide();
+       
+       
+        //$('.completed-details').removeAttr('required');
+        
+        $(cont+'input:radio[name="currency"]').attr('checked', false);
+        
+        
+        
+   
+        $(cont+'.adj input,.adj div ,.adj select').removeAttr('required');
+        $(cont+'.completed-details').removeAttr('required') 
+
+   //var resetvalues =      $('.adj1 input,.adj3 input,.adj4 input,.adj6 input,#pc_adjustment_amount,#pc_change_details,#ava_adjustment_amount,#ava_detail_of_change');
+            
+           // resetvalues.val('');
+
+
+ //$(cont+'.updatepasswordinput').removeAttr('required');  $(cont+'.updatepasswordinput').attr('required', 'required');
+
+        $(cont+'input:radio[name="currency"],' +cont+'input:radio[name="ava_contract_currency"]').attr('checked', false);
+        $(cont+"input[name=currency]," +cont+"input[name=currency]").val(['GBP']);
+        
+        
+        $(cont+'.selectpicker').selectpicker('refresh');
+       
+        var adjNumber  = $(this).val();
+
+     
+
+        if(adjNumber){
+           
+            $(cont+'.adj, '+cont+'.group1, ' +cont+'.group2').hide();
+            $(cont+'.adj, '+cont+'.group1, ' +cont+'.group2').removeAttr('required');
+
+        if((adjNumber <= 3)) $(cont+'.group_default, '+cont+'.group1').show() + $(cont+'.rqd_group_default, '+cont+'.rqd_group1').attr('required', 'required') + $(cont+'.weekending').val('');
+        if((adjNumber >= 4)) $(cont+'.group_default, '+cont+'.group2').show() + $(cont+'.rqd_group_default, '+cont+'.rqd_group2').attr('required', 'required');
+        }
+    
+   
+    })
+
+
+    $('.vatreason, .contractvatreason').on('change',function(){
+var  cont = '.adjcont'+$(this).attr('data')+' ';
+        var showbox
+
+        var adjNumber  = $(this).val();
+
+ $('.completed-details').removeAttr('required');
+         if(false){
+        //console.log(adjNumber);
+        // $('.adj'+adjNumber+'').show();
+        //$(".addActionOutcome").hide();  $('.completed-details').attr('required', 'required')
+        $(".editorAction").html('');
+        if(adjNumber == 6)  showbox = true;
+        showbox ? $(".addActionOutcome").show() + $('.completed-details').attr('required', 'required') : $(".addActionOutcome").hide();
+         }
+
+    })
+
+
+
+    $('.vatreason').on('change',function(){
+
+        var showbox
+        var adjNumber  = $(this).val();
+        if(adjNumber){
+            $(".editorAction").html('dam it man');
+
+            if(false)  showbox = true;
+
+                showbox ? $(".addActionOutcome").show() : $(".addActionOutcome").hide();
+
+             }else{
+                 $(".addActionOutcome").hide();
+                 $(".editorAction").html('');
+             }
+     })
+adjustment_set_required()
+$('.weekending').datetimepicker();
+}
+
+
+function adjustment_set_required(){
+
+ var adjNumber;
+var  cont ;
+$('.adjcontactions .adjustmentSelectordefaultaction').each(function(){
+
+//console.log('sdfs'+adjNumber)
+
+ adjNumber  = $(this).val();
+ 
+
+if(adjNumber){
+ cont = '.adjcont'+$(this).attr('data')+' ';
+           //console.log(cont+'.group1');
+            $(cont+'.adj, '+cont+'.group1, ' +cont+'.group2').hide();
+            $(cont+'.adj, '+cont+'.group1, ' +cont+'.group2,' +cont+'.rqd_group1,' +cont+'.rqd_group2').removeAttr('required');
+
+        if((adjNumber <= 3)) $(cont+'.group_default, '+cont+'.group1').show() + $(cont+'.rqd_group_default, '+cont+'.rqd_group1').attr('required', 'required') + $(cont+'.weekending').val('');
+        if((adjNumber >= 4)) $(cont+'.group_default, '+cont+'.group2').show() + $(cont+'.rqd_group_default, '+cont+'.rqd_group2').attr('required', 'required');
+        }
+
+})
+
+
+    $('.adj_action_btn_save').on('click', function(){
+
+        var dataid = $(this).attr('data');
+
+        $('#adjsub'+dataid+'').trigger('click');
+
+    })
+
+$('.adjsubmit').unbind('click');
+$('.adjform').submit(function(){
+    event.preventDefault();
+
+ 
+var dataID = $(this).attr('data');
+ 
+
+ 
+                               var url = $(this).attr('action');
+           
+ 
+                //JS JASON WITH POST PARAMETER
+                var para = $(this).serialize();
+                $.ajax({
+                    type: "POST",
+                    data: para,
+                    dataType: "json",
+                    url: "../"+url,
+                    success: function(data) {
+
+                        console.log(data)
+              
+                    }
+                });
+
+
+})
+
+
+
+}
+
+
+function addActionMultipleFileFields(){
+    
+    
+      $('#addActionMultipleFileFields').append('<div class="col-sm-10  alert alert-info alert-dismissable  "><div class="col-md-8 "><input type="text" name="userfilename[]" required="required" class="form-control" placeholder="Please name your file" style="margin-top:-7px; text-transform:capitalize;"></div><div class="col-xs-4 col-sm-3 col-md-3 col-lg-3"><input type="file" name="userfile[]" id="userfile" required="required" size="20" /> </div> <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><button type="button" class="btn btn-warning btn-xs multifileremover">Remove</button></div></div>');
     
     bindMultipleFileRemover();
 }
@@ -1356,11 +1699,11 @@ function getUserFavourites(){ // Dashbord favorites
                 $('#assigned .panel-body').prepend(favourites.join(""));
                 }
                 if(order){
-                       $('#assigned .panel-body').prepend(Suspect.join(""));
-                      $('#assigned .panel-body').prepend(Prospect.join(""));
+                    $('#assigned .panel-body').prepend(Suspect.join(""));
+                    $('#assigned .panel-body').prepend(Prospect.join(""));
                     $('#assigned .panel-body').prepend(Intent.join(""));
                     $('#assigned .panel-body').prepend(Proposal.join(""));
-                $('#assigned .panel-body').prepend(Customer.join(""));
+                    $('#assigned .panel-body').prepend(Customer.join(""));
                   
                 
               

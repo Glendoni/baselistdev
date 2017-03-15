@@ -14,8 +14,8 @@ class Companies extends MY_Controller {
         //$this->input->get('id')
         ///$this->input->post(),$this->data['current_user']['id']
 		$this->load->model('Tagging_model');
-          $this->load->model('Files_model'); 
-          $this->load->model('Sectors_model'); 
+        $this->load->model('Files_model'); 
+        $this->load->model('Sectors_model'); 
 		$this->load->helper('url');
         $this->load->helper('form');
         $this->load->library('form_validation');

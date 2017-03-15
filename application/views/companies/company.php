@@ -1,19 +1,11 @@
+
 <?php  $company = $companies[0]; ?>
             <?php if (!empty($_GET['campaign_id'])): 
                     $campaign_id = $_GET['campaign_id'];
                 endif; ?>
-            <?php if (!isset($company['active'])): ?>
-                    <div class="alert alert-danger" role="alert"><?php echo $company['name']; ?> is no longer active. </div>
-
-            <?php 
-
-endif;
-
-?>
-
- <?php if (isset($company['active'])): ?>
-
-
+            <?php if (!isset($company['id'])): ?>
+                    <div class="alert alert-danger" role="alert">This company is no longer active.</div>
+            <?php endif; ?>
             <?php //hide core page content if no company is found ?>
                 <?php if (isset($company['id'])): ?>
                     <div class="page-results-list" id="parent" style="padding-top: 116px;">
@@ -21,50 +13,13 @@ endif;
                     <div class="row top-info-holder">
                     <div class="col-md-9 piplineUdate" style="    padding-left: 31px;height: 20px;margin-top: 6px;">
                                 <!-- <breadcrumbscroll> -->
-                        
-                        
-                      
     <h2 class="company-header" id="logo">
-                <?php $words = array( ' Limited', ' LIMITED', ' LTD',' ltd',' Ltd' ); echo html_entity_decode (str_replace($words, ' ',$company['name'])); ?> 
-        
-        
-                             
-        
-        
-                             </h2>
-                        
-                        
-               
-   
-            <div>
-
-                <?php if (isset($company['confidential_flag'])): ?>
-                    <h5 class="trading-header" style="margin-top: 9px; margin-left: 2px;">
-                    <?php if($company['confidential_flag']): ?>
-                        <span class="label confidential_status" style="">
-                            <b>Enterprise</b> 
-                        </span>
-                    <?php endif; ?>
-
-                <?php endif; ?>
-
-
-                </h5>
-                <?php if (isset($company['trading_name'])): ?>
-                <div class="spacer" style="clear: both;"></div>
-                <br> <p id="comapny_header_trading_name">
-                    <small><b>T/A</b></small> 
-                    <?php echo $company['trading_name'];?>
-                </p>
-                <?php endif; ?>
-
-            </div>
-                            
-                       
-                        
-                        <div>
-  
-                        </div>
+                <?php $words = array( ' Limited', ' LIMITED', ' LTD',' ltd',' Ltd' ); echo html_entity_decode (str_replace($words, ' ',$company['name'])); ?></h2>
+    <?php if (isset($company['trading_name'])): ?>
+        <h5 class="trading-header-top">
+        <small><b>T/A</b></small>  <?php echo $company['trading_name'];?>
+        </h5>
+    <?php endif; ?>
     <div class="spacer" style="clear: both;"></div>
 
 
@@ -78,14 +33,6 @@ endif;
  <?php if(isset($company['account_manager'])): ?>
     <span class="label" style="background-color: #01A4A4; color:#fff; margin-left: 5px;"><b>Account Manager:</b> <?php echo $company['account_manager']?></span>
     <?php endif; ?>
-                        
-                      
-                        
-                        
-  
-
-
- 
                                         <?php 
                         if(!empty($company['pipeline'])):
                        
@@ -98,7 +45,7 @@ endif;
                                         $number  = $company['initial_rate'];
                                         //$number = 5.00;
                                         $number =  preg_match('[-+]?([0-9]*\.[0]+|[0]+', $number) ? false : $number;
-                                        echo $number ? '<span class="initial_rate_found">  - &#64;'.($number*100).'%</span>' : '<span class="initial_rate_not_found"> - Rate Not Set</span>' ;  ?>
+                                        echo $number ? '<span class="initial_rate_found">  - @'.($number*100).'%</span>' : '<span class="initial_rate_not_found"> - Rate Not Set</span>' ;  ?>
                                         <?php endif; ?>
                                         </span>
 
@@ -126,11 +73,17 @@ endif;
                         
                         
                                         <?php if($company['customer_to']){  ?>
-                                         &nbsp;<span class="label label-Customer">
+                                          <span class="label label-Customer">
                                         Customer From:   <?php echo date('d/m/Y',strtotime($company['customer_from'])); ?>
                                         </span>  <span class="label  label-<?php echo str_replace(' ', '', $company['pipeline']); ?> cancelledPill">
                                         Cancelled:  <?php echo date('d/m/Y',strtotime($company['customer_to'])); ?>
                                         </span>
+                        
+                        
+                        
+                       
+                        
+                        
                         
                                         <?php } ?>
 
@@ -145,12 +98,13 @@ endif;
                                         <?php endif; ?>
 
        
-                    
+                        
                    
                         
                         
                         
                         </div><!--END ROW-->
+
 
                <!--END ROW-->
  <div class="col-md-3">
@@ -161,7 +115,7 @@ endif;
 
                        <!-- Fravorite Star -->
                                                         <?php if(isset($company['assigned_to_name']) and !empty($company['assigned_to_name'])): ?>
-                                                            <?php if($company['assigned_to_id'] == $current_user['id']) : ?>	
+                                                            <?php if($company['assigned_to_id'] == $current_user['id']) : ?>    
                                                                     <?php  $hidden = array('company_id' => $company['id'] , 'user_id' => $current_user['id'], 'page_number' => (isset($current_page_number))? $current_page_number:'');
                                                                         echo form_open('companies/unassign',array('name' => 'assignto', 'class'=>'assign-to-form', 'style'=>'display: inline; padding-right: 12px;    float: right;'),$hidden); 
                                                                     ?>
@@ -209,12 +163,13 @@ endif;
     </div>
 
 
-
       
 
 
         <!-- // POPUP BOXES -->
         </div><!--END TOP INFO HOLDER-->
+
+
   <div class="row">
 
       
@@ -230,6 +185,110 @@ endif;
 
 
         </div>
+
+        <?php
+        $ch = curl_init();
+$username = 'dchapple@sonovate.com';
+$password = '25Million';
+curl_setopt($ch, CURLOPT_URL, "https://sonovate.zendesk.com/api/v2/search.json?query=organization:1433900306+tags:onboarding");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+//$body = '{"organization": {"name": "Nick H Test Org"}}';                          
+//curl_setopt($ch, CURLOPT_POSTFIELDS,$body);
+curl_setopt($ch, CURLOPT_USERPWD, $username . ":" . $password);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+'Content-Type: application/json',
+'Connection: Keep-Alive'
+));
+$result=curl_exec($ch);
+$data1 = json_decode($result, true);
+curl_close($ch);
+if($data1["count"]>0){ ?> 
+    <style type="text/css">
+    .label-outstanding {
+        background-color: #c7c7c7;
+    }
+    .on-boarding-holder .label {
+        font-size: 8px;
+    }
+    .label-padding {
+        margin-left: 5px;
+    }
+    .transfer-process-text {
+        font-size: 10px;
+        color: #c7c7c7;
+    }
+</style>
+<div class='container-fluid'><div class='col-md-12'><div class='on-boarding-holder' style="margin-left: -1px;">
+
+<?php
+ $ob_started = date('l jS F Y', strtotime($data1["results"][0]["created_at"]));
+ $ob_updated = date('l jS F Y', strtotime($data1["results"][0]["updated_at"]));
+
+foreach($data1["results"][0]["custom_fields"] as $x => $x_value) {
+
+if($x_value["id"]==24906083) {
+
+
+            if($x_value["value"] == 1) {
+            echo "<span class='label label-success label-padding'><i class='fa fa-check-circle-o' aria-hidden='true'></i> Invoice Balance Reviewed</span>";
+          }
+          else
+          {
+            echo "<span class='label label-outstanding label-padding'><i class='fa fa-circle-o' aria-hidden='true'></i> Invoice Balance Outstanding</span>";
+          }
+
+}
+if($x_value["id"]==24905923) {
+
+
+            if($x_value["value"] == 1) {
+            echo "<span class='label label-success label-padding'><i class='fa fa-check-circle-o' aria-hidden='true'></i> Active Client List Reviewed</span>";
+          }
+          else
+          {
+            echo "<span class='label label-outstanding label-padding'><i class='fa fa-circle-o' aria-hidden='true'></i> Active Client List Outstanding</span>";
+          }
+          
+}
+if($x_value["id"]==24968786) {
+
+
+            if($x_value["value"] == 1) {
+            echo "<span class='label label-success label-padding'><i class='fa fa-check-circle-o' aria-hidden='true'></i> All Clients Credit Checked</span>";
+          }
+          else
+          {
+            echo "<span class='label label-outstanding label-padding'><i class='fa fa-circle-o' aria-hidden='true'></i> Clients Awaiting Credit Check</span>";
+          }
+          
+}
+if($x_value["id"]==24968806) {
+
+
+            if($x_value["value"] == 1) {
+            echo "<span class='label label-success label-padding'><i class='fa fa-check-circle-o' aria-hidden='true'></i> Sales Ledger Report Created</span>";
+          }
+          else
+          {
+            echo "<span class='label label-outstanding label-padding'><i class='fa fa-circle-o' aria-hidden='true'></i> Sales Ledger Report Outstanding</span>";
+          }
+          
+}
+}?>
+</div></div>
+<div class='col-md-12' style="margin-left: -10px;">
+<span class="transfer-process-text">Transfer process started on <?php echo $ob_started;?> | Last updated on <?php echo $ob_updated;?></span>
+
+</div>
+</div>
+<?php
+} //END OF COUNT
+?>
+                                
+                  
+
+
         <div class="row">
 
 
@@ -253,16 +312,15 @@ endif;
  
 
 <!-- POPUP BOXES -->
-	<?php $this->load->view('companies/edit_box.php',array('company'=>$company)); ?>
-	<?php $this->load->view('companies/create_contact_box.php',array('company'=>$company)); ?>
-    <?php $this->load->view('companies/service_offering_box.php',array('company'=>$company)); ?>
-	<?php $this->load->view('companies/create_address_box.php',array('company'=>$company)); ?>
+    <?php $this->load->view('companies/edit_box.php',array('company'=>$company)); ?>
+    <?php $this->load->view('companies/create_contact_box.php',array('company'=>$company)); ?>
+    <?php $this->load->view('companies/create_address_box.php',array('company'=>$company)); ?>
    
 <div class="panel panel-primary">
-	<div class="panel-body" style="padding-top:40px;     margin-bottom: 5px;">
-    	<div class="row"><!--FINISHED AT THE END OF PANEL-->
-		<div class="col-sm-9">
-		<div class="row">
+    <div class="panel-body" style="padding-top:80px;">
+        <div class="row"><!--FINISHED AT THE END OF PANEL-->
+        <div class="col-sm-9">
+        <div class="row">
 <div class="col-sm-12 action-details">
 <div class="row"> 
 <div class="col-md-4 col-lg-4 col-sm-4">
@@ -282,10 +340,10 @@ $your_date = strtotime($company['actioned_at1']);
 $datediff = abs($now - $your_date);
 $days_since = floor($datediff/(60*60*24));
 if ($company['actioned_at1'] > 0){
-	echo "<br> ".$days_since." days ago";
-	} else {
-	echo "<br> ".$days_since." day ago)";;
-	}
+    echo "<br> ".$days_since." days ago";
+    } else {
+    echo "<br> ".$days_since." day ago)";;
+    }
 ?></div>
 
 <?php endif; ?>
@@ -296,11 +354,11 @@ if ($company['actioned_at1'] > 0){
 <div><strong>Scheduled</strong></div>
   
 <?php if (empty($company['planned_at2'])): ?>
-	None
+    None
 <?php else: ?>
-	<div class="action_type"><?php echo $company['action_name2']." by ".$company['action_user2']; ?></div>
+    <div class="action_type"><?php echo $company['action_name2']." by ".$company['action_user2']; ?></div>
 
-	<div class="action_date_list">
+    <div class="action_date_list">
 <?php echo date("l jS F Y",strtotime($company['planned_at2']));?>
 </div>
 <?php
@@ -321,201 +379,177 @@ if ($your_date < $now){;
 
 </div>
     
-		<div class="col-xs-6 col-md-3" >
-				<label>Class</label><br>
-				<p>	
-		            <!--CLASS IF APPLICABLE-->
-		          
+        <div class="col-xs-6 col-md-3" >
+                <label>Class</label><br>
+                <p> 
+                    <!--CLASS IF APPLICABLE-->
+                  
                   <?php if (isset($company['class']) && $company['class'] != 'Unknown' ): ?>
-					 <?php echo  $company['class']; ?> 	
-					<?php else: 
+                     <?php echo  $company['class']; ?>  
+                    <?php else: 
                     
                     //echo '-';
                     
                     ?>
-						
-		            <?php endif; ?>
-	            </p>
-			</div>	 
+                        
+                    <?php endif; ?>
+                </p>
+            </div>   
     
 </div><!--END ROW-->
 <hr>
     
 </div>
-	
+    
 
-        	<div class="col-xs-6 col-md-4" style="margin-top:10px;">
-        	<label>Founded</label><br>
-			<p>	
-				<?php echo isset($company['eff_from'])?$company['eff_from']:''; ?>
-			</p>
-		</div>
+            <div class="col-xs-6 col-md-4" style="margin-top:10px;">
+            <label>Founded</label><br>
+            <p> 
+                <?php echo isset($company['eff_from'])?$company['eff_from']:''; ?>
+            </p>
+        </div>
             <div class="col-xs-6 col-md-4 details" style="margin-top:10px; ">
-			<label>Company</label><br>
-			<p>	
-			 <!--COMPANY NUMBER IF APPLICABLE-->
+            <label>Company</label><br>
+            <p> 
+             <!--COMPANY NUMBER IF APPLICABLE-->
                 <?php echo isset($company['name'])?$company['name']:''; ?><br>
-			<?php echo isset($company['registration'])?$company['registration']:''; ?>
-         	</p>
-        	</div>
+            <?php echo isset($company['registration'])?$company['registration']:''; ?>
+            </p>
+            </div>
 
         <div class="col-xs-6 col-md-3" style="margin-top:10px;">
-        		<label>Phone</label><br>
-        		<p>
-        		<?php echo isset($company['phone'])?$company['phone']:''; ?>                
-           		</p>
-			</div><!--END PHONE NUMBER-->
-	
+                <label>Phone</label><br>
+                <p>
+                <?php echo isset($company['phone'])?$company['phone']:''; ?>                
+                </p>
+            </div><!--END PHONE NUMBER-->
+    
             <?php /* ?>
-		<div class="col-md-6">
-				<label>Registered Address</label>
-				<p>	
+        <div class="col-md-6">
+                <label>Registered Address</label>
+                <p> 
 
                 <?php echo isset($company['address'])?'<a href="http://maps.google.com/?q='.urlencode($company['address']).'" target="_blank">'.$company['address'].'<span style="    line-height: 15px;font-size: 10px;padding-left: 5px;"><i class="fa fa-external-link"></i></span></a>':'-'; ?>  
-				</p>
-		</div>
+                </p>
+        </div>
         
             <?php  */ ?>
             <!--END ADDRESS-->
-		
+        
 
             
             <!--END TRADING NAME-->
             
-		</div><!--END ROW-->
+        </div><!--END ROW-->
         </div><!--CLOSE MD-9-->
-		<div class="col-sm-3">
-		<!--Check if company is blacklisted - if so hide the actions boxes -->
-		<?php if ($company['pipeline']=='Blacklisted'): ?>
-		<?php else: ?>
-		<?php $this->load->view('companies/actions_box.php',array('company'=>$company)); ?>
+        <div class="col-sm-3">
+        <!--Check if company is blacklisted - if so hide the actions boxes -->
+        <?php if ($company['pipeline']=='Blacklisted'): ?>
+        <?php else: ?>
+        <?php $this->load->view('companies/actions_box.php',array('company'=>$company)); ?>
 
-		<!-- LINKS AND BTN -->
-			<?php 
-            
-            
-            
-            if (($company['sonovate_id']) && ENVIRONMENT == 'production' ){ ?>
-			<a class="btn  btn-info btn-sm btn-block sonovate" href="https://members.sonovate.com/agency-admin/<?php echo $company['sonovate_id'] ?>/profile"  target="_blank">Sonovate 3.0</a>
-			<?php } ?>
-             
-            
-            <?php if (($company['sonovate_id']) && ENVIRONMENT == 'staging' ){ ?>
-			<a class="btn  btn-info btn-sm btn-block sonovate" href="https://invoicing-dev.sonovate.com/agency-admin/<?php echo $company['sonovate_id'] ?>/profile"  target="_blank">Sonovate 3.0</a>
-			<?php } ?>
-            
-            
-             <?php if (($company['sonovate_id']) && ENVIRONMENT == 'development' ){ ?>
-			<a class="btn  btn-info btn-sm btn-block sonovate" href="https://invoicing-dev.sonovate.com/agency-admin/<?php echo $company['sonovate_id'] ?>/profile"  target="_blank">Sonovate 3.0</a>
-			<?php } ?>
-            
-            
-	<?php if (($current_user['department']) =='support' && isset($company['zendesk_id'])): ?>
-			<a class="btn  btn-info btn-sm btn-block zendesk" href="https://sonovate.zendesk.com/agent/organizations/<?php echo $company['zendesk_id'] ?>"  target="_blank">ZenDesk</a>
-			<?php endif; ?>
+        <!-- LINKS AND BTN -->
+            <?php if (isset($company['sonovate_id'])): ?>
+            <a class="btn  btn-info btn-sm btn-block sonovate" href="https://members.sonovate.com/agency-admin/<?php echo $company['sonovate_id'] ?>/profile"  target="_blank">Sonovate 3.0</a>
+            <?php endif; ?>
+    <?php if (($current_user['department']) =='support' && isset($company['zendesk_id'])): ?>
+            <a class="btn  btn-info btn-sm btn-block zendesk" href="https://sonovate.zendesk.com/agent/organizations/<?php echo $company['zendesk_id'] ?>"  target="_blank">ZenDesk</a>
+            <?php endif; ?>
              <?php if (isset($company['url'])): ?>
-		<a class="btn btn-default btn-sm btn-block btn-url" href="<?php $parsed = parse_url($company['url']); if (empty($parsed['scheme'])) { echo 'http://' . ltrim($company['url'], '/'); }else{ echo $company['url']; } ?>" target="_blank">
-		<label style="margin-bottom:0;"></label> <?php echo str_replace("http://"," ",str_replace("www.", "", $company['url']))?>
-		</a>
-		<?php else: ?>
+        <a class="btn btn-default btn-sm btn-block btn-url" href="<?php $parsed = parse_url($company['url']); if (empty($parsed['scheme'])) { echo 'http://' . ltrim($company['url'], '/'); }else{ echo $company['url']; } ?>" target="_blank">
+        <label style="margin-bottom:0;"></label> <?php echo str_replace("http://"," ",str_replace("www.", "", $company['url']))?>
+        </a>
+        <?php else: ?>
     <a class="btn  btn-default btn-sm btn-block " href="https://www.google.co.uk/search?q=<?php echo urlencode(htmlspecialchars_decode($company['name'], ENT_QUOTES));  ?>"  target="_blank">Google <i class="fa fa-search" aria-hidden="true"></i></a>
             <?php endif; ?>
             
-			<?php if (isset($company['linkedin_id'])): ?>
-			<a class="btn  btn-info btn-sm btn-block linkedin" href="https://www.linkedin.com/company/<?php echo $company['linkedin_id'] ?>"  target="_blank">LinkedIn</a>
+            <?php if (isset($company['linkedin_id'])): ?>
+            <a class="btn  btn-info btn-sm btn-block linkedin" href="https://www.linkedin.com/company/<?php echo $company['linkedin_id'] ?>"  target="_blank">LinkedIn</a>
             <?php else: ?>
-		<?php $words = array( ' Limited', ' LIMITED', ' LTD',' ltd',' Ltd' );
-		$name_no_ltd = str_replace($words, '',$company['name']); ?>
+        <?php $words = array( ' Limited', ' LIMITED', ' LTD',' ltd',' Ltd' );
+        $name_no_ltd = str_replace($words, '',$company['name']); ?>
 
               <a class="btn  btn-primary btn-sm btn-block" href="https://www.linkedin.com/vsearch/f?type=all&keywords=<?php echo  urlencode($name_no_ltd) ?>"  target="_blank">LinkedIn <i class="fa fa-search" aria-hidden="true"></i> </a>
             <?php endif; ?>
-					
-			
-			<?php if (isset($company['registration'])): ?>
-			<a class="btn  btn-info btn-sm btn-block companieshouse" href="https://beta.companieshouse.gov.uk/company/<?php echo $company['registration'] ?>" target="_blank">Companies House</a>
-			<?php endif; ?>
-		<?php endif; ?>
+                    
+            
+            <?php if (isset($company['registration'])): ?>
+            <a class="btn  btn-info btn-sm btn-block companieshouse" href="https://beta.companieshouse.gov.uk/company/<?php echo $company['registration'] ?>" target="_blank">Companies House</a>
+            <?php endif; ?>
+        <?php endif; ?>
          
         </div><!--CLOSE COL-MD-3-->
-		
+        
             
             
             
             
             <div class="col-md-12">
-			<hr>
-		
+            <hr>
+        
 <div class="row  details">
-	
-	 
+    
+     
                 
             <div class="col-md-3" style="display:none;">
-					<!-- CONTACTS -->
-            	<label>Contacts</label> 		
-			<?php if (isset($company['contacts_count'])): ?>
-			<p class="details"><?php echo $company['contacts_count'] ?  $company['contacts_count'] : '';?></p>
-			<?php endif; ?>
-			 
-		</div>
+                    <!-- CONTACTS -->
+                <label>Contacts</label>         
+            <?php if (isset($company['contacts_count'])): ?>
+            <p class="details"><?php echo $company['contacts_count'] ?  $company['contacts_count'] : '';?></p>
+            <?php endif; ?>
+             
+        </div>
     
     
-	 <div class="col-xs-4 col-sm-3">
-			<label><span style="text-transform: capitalize"><?php echo isset($company['turnover_method'])?$company['turnover_method']:'';?></span> Turnover</label><br>
-			<p class="details" style="margin-bottom:5px;"><?php echo isset($company['turnover'])? '£'.number_format (round($company['turnover'],-3)):'';?></p>
+     <div class="col-xs-4 col-sm-3">
+            <label><span style="text-transform: capitalize"><?php echo isset($company['turnover_method'])?$company['turnover_method']:'';?></span> Turnover</label><br>
+            <p class="details" style="margin-bottom:5px;"><?php echo isset($company['turnover'])? '£'.number_format (round($company['turnover'],-3)):'';?></p>
             
             
         </div>
             
-
-
-
               <div class="col-md-3" >
-				<label>Lead Source</label>
-				<p style="
+                <label>Lead Source</label>
+                <p style="
     margin-top: -4px;
 "><?php echo  $company_sources[$company['source']]  ? $company_sources[$company['source']]. ''  : '';?><br>
                  <strong><?php echo  $company_sources[$company['source']]  ? ''  : '';?></strong> <span class="leadSourceSubText"><?php echo $company['source_explanation'] ? $company['source_explanation'] : ''; ?></span></p>
-			 
-		</div>
-    
-    
-      
+             
+        </div>
                 
-		<!-- EMPLOYEES -->
-		<div class="col-xs-4 col-sm-3">
-			<strong>Employees</strong><br>
-			<?php if (isset($company['emp_count'])): ?>
-			<p class="details"><?php echo $company['emp_count'];?> </p>
-			<?php else: ?>
+        <!-- EMPLOYEES -->
+        <div class="col-xs-4 col-sm-3">
+            <strong>Employees</strong><br>
+            <?php if (isset($company['emp_count'])): ?>
+            <p class="details"><?php echo $company['emp_count'];?> </p>
+            <?php else: ?>
             <p class="details"></p>
-			<?php endif; ?>
+            <?php endif; ?>
             </div>
-		<!-- SECTORS -->
-		<div class="col-xs-4 col-sm-3">
-			<div class="tag_sectortagheading"><strong>Sectors</strong></div>
-			<?php
-			if(isset($company['sectors'])){
-	 
+        <!-- SECTORS -->
+        <div class="col-xs-4 col-sm-3">
+            <div class="tag_sectortagheading"><strong>Sectors</strong></div>
+            <?php
+            if(isset($company['sectors'])){
+     
             echo '<div class="sectorsPlainText">';
-              
+                
+                
              //print_r($not_target_sectors_list);
             foreach (array_reverse($company['sectors']) as $key => $name)
-				{
-				//echo  $name.$key.'<br>' ;
+                {
+                //echo  $name.$key.'<br>' ;
                 
               if(in_array($name,$not_target_sectors_list)){
                   
                $notinsec[] = '<span class="notsector" style=" "> '.$name.'</span> <br>'  ;  
-              }elseif( in_array($name,$bespoke_target_sectors_list)){
-                  
-                  //$insec[] =  '<span  class="issector" style="color: red;  "> '.$name.' </span><br>' ;   
               }else{
                   
                 $insec[] =  '<span  class="issector" style="color: green;  "> '.$name.' </span><br>' ;   
                   
               }
                 
-				}
+                }
                 
                    echo join($insec, '');
                 echo join($notinsec, '');
@@ -524,7 +558,7 @@ if ($your_date < $now){;
              echo '</div>';
         }
             
-			?>
+            ?>
             
             
             
@@ -541,86 +575,322 @@ if ($your_date < $now){;
     
     
     
-		</div>
+        </div>
             </div>
             
-		<div class="row">
-		<div class="col-xs-12 details" >
-		 
+        <div class="row">
+        <div class="col-xs-12 details" >
+         
                <div class="subcont"> 
 
                     <!-- <h4 class="ta"></h4> -->
                     <!--<ul id="fetags"></ul> -->
                     </div>
             
-		</div>
-		</div>
-		</div>
-		<div class="col-md-12">
-			<hr>
-		</div>
-    </div>
-		
-       		<!--CONTACTS-->
-      
-        <?php
-
-    $exclude_from_view = array('sales','data');
-        if(!in_array($current_user['department'],$exclude_from_view)){ 
-    
-    ?>
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading" id="bespoke" >
-               Service Overview 
-                
-                <div class="pull-right">
-                <div class="btn-group">
-                <button class="btn btn-primary edit-btn btn-xs" data-toggle="modal"  data-target="#serviceoffering">
-                <span class="ladda-label"><?php echo count($bespokeSelected) ? 'Edit Services' : 'Add Service'; ?>  </span>
-                </button>
-                </div>
-                </div>
-            </div>
-        <!-- /.panel-heading -->
-            <div class="panel-body">
-                <table class="table">
-                
-                    <?php if(count($bespokeSelected)){ ?>
-                    <thead>
-                <tr>
-                <th class="col-md-6">Services</th>
-                <th class="col-md-6">Date Created</th>
-                </tr>
-                </thead>
-                    <?php }else{
-        
-        echo '<div class="alert alert-info">
-<p style="text-align:center;">No Services Applicable </p>
-</div>'
-;
-        
-    } ?>
-                    
-                <tbody>
-                <?php 
-                foreach($bespokeSelected as $bsk => $bsv){ ?>
-                    <tr>
-                        <td class="col-md-6"><?php echo $bsv['name']; ?> </td>
-                        <td class="col-md-6"> <?php echo date("l jS F Y", strtotime($bsv['created_at'])); ?></td>
-                    </tr>
-                <?php    }   //echo '<span  class="issector" style="color: #2a48ad;  "> '.$bsv['name'].' </span><br><span class="bespoke_date">Created at: '.date("l jS F Y", strtotime($bsv['created_at'])).'</span><br>' ; ?>  
-
-                </tbody>
-                </table>
-
-            </div>
-        <!-- /.panel-body -->
+        </div>
+        </div>
         </div>
 
+        <?php if (isset($company['sonovate_id'])):
+$sonovate_id = $company['sonovate_id'];
+        $connson = pg_pconnect("host=ec2-54-195-252-202.eu-west-1.compute.amazonaws.com port=5432 dbname=dd1n5g30qcvmng user=ptxvnmmsnnjpsc password=u5iqoke2axnF9LwYMPtn9GVYLk");
+
+ if (!$connson) {
+  //echo "Looks like I can't connect to the SOnovate DB at the moment....";
+  //exit;
+} $sql3 ="SELECT count(id),sum(CASE WHEN p.status = 'Approved' and enddate >= now() THEN 1 ELSE 0 END), sum(CASE WHEN p.status = 'Submitted' THEN 1 ELSE 0 END), now()::date - max(datesubmitted)::date FROM sv_placements p where agencyid = '".$sonovate_id."' and status <> 'NotSubmitted'";
+$result3 = pg_query($connson,$sql3);
+while ($row3 = pg_fetch_row($result3)) {
+
+$total_placements = $row3[0];
+$live_placements = $row3[1];
+$pending_placements = $row3[2];
+$days_since_last_placement = $row3[3];
+}
+pg_close($connson);
+if ($days_since_last_placement <= 30) {
+    $days_class = "live";
+}
+else if($days_since_last_placement > 30 && $days_since_last_placement <= 90){
+    $days_class = "pending";
+}
+else {
+    $days_class = "warning";
+};
+            ?>
+<style type="text/css">
+    .large_placement_number {
+        font-size: 80px;
+        font-weight: 300;
+    }
+        .large_placement_text {
+        font-size: 14px;
+        font-weight: 700;
+        margin-top: -10px;
+    }
+    .large_placement_text.live,.large_placement_number.live {
+color: #4caf50;
+    }
+    .large_placement_text.pending,.large_placement_number.pending {
+color: #ffbe23;
+    }
+    .large_placement_text.warning,.large_placement_number.warning {
+color: #dd4140;
+    }
+    
+</style>
+
+        
+        <div class="panel panel-default">
+        
+    
+        <div class="panel-heading">
+        Placements
+        </div>
+        <!-- /.panel-heading -->
+ 
+        <div class="panel-body">
+
+        <?php if($total_placements>0) {?>
+        <div class="col-md-3 centre">
+            <div class="large_placement_number"><?php echo $total_placements;?></div>
+            <div class="large_placement_text">Submitted Placements</div>
+        </div>
+        <div class="col-md-3 centre">
+            <div class="large_placement_number live"><?php echo $live_placements;?></div>
+            <div class="large_placement_text live">Live Placements</div>
+        </div>
+                <div class="col-md-3 centre">
+            <div class="large_placement_number pending"><?php echo $pending_placements;?></div>
+            <div class="large_placement_text pending">Pending Placements</div>
+        </div>
+                        <div class="col-md-3 centre">
+            <div class="large_placement_number <?php echo $days_class;?>"><?php echo $days_since_last_placement;?></div>
+            <div class="large_placement_text <?php echo $days_class;?>">Days Since Last Placement</div>
+
+</div><?php
+}
+else  {?>There are currently no placements for this agency.<?php };?>
+       </div>
+        </div>
+ 
+        <!-- /.panel-body -->
+        <?php endif; ?>
+        <!--PLACEMENT INFO-->
+
+    
+       
+
+
+<!--ZENDESK-->
+
+              <?php
+        
+        $zendesk_id = $company['zendesk_id'];
+               if(isset($zendesk_id) and !empty($zendesk_id)) : 
+
+                $ch = curl_init();
+$username = 'dchapple@sonovate.com';
+$password = '25Million';
+curl_setopt($ch, CURLOPT_URL, "https://sonovate.zendesk.com/api/v2/organizations/".$zendesk_id."/tickets.json?sort_by=created_at&sort_order=desc&status=open");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+//$body = '{"organization": {"name": "Nick H Test Org"}}';                          
+//curl_setopt($ch, CURLOPT_POSTFIELDS,$body);
+curl_setopt($ch, CURLOPT_USERPWD, $username . ":" . $password);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+'Content-Type: application/json',
+'Connection: Keep-Alive'
+));
+$result=curl_exec($ch);
+$data = json_decode($result, true);
+$ticket_count = $data["count"];
+?>
+        <div class="panel panel-default">
+        <div class="panel-heading" id="addresses">
+        Zendesk Tickets (<?php echo number_format($ticket_count);?>)
+        <div class="pull-right">
+            
+        <div class="btn-group">
+            <a href="https://sonovate.zendesk.com/agent/organizations/<?php echo $zendesk_id;?>" class="btn btn-primary btn-xs zendesk" target="_blank">
+View Company on Zendesk
+</a>
+
+
+        </div>
+            
+        </div>
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Open</a></li>
+    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Closed</a></li>
+  </ul>
+
+<style type="text/css">
+    .table-fixed tbody {
+  height: 230px;
+  overflow-y: auto;
+  width: 100%;
+}
+</style>
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="home">
+        <table class="table table-fixed">
+            <thead>
+                <tr>
+                    <th class="col-md-2">Date</th>
+                    <th class="col-md-2">Raised By</th>
+                    <th class="col-md-1">Status</th>
+                    <th class="col-md-6">Subject</th>
+                    <th class="col-md-1"> </th>
+                </tr>
+            </thead>
+            <tbody>
+
+       <?php
+$x = 0;
+foreach ($data['tickets'] as $field => $value) {
+
+    $req_name = $value['via']['source']['from']['name']; 
+    $req_email = $value['via']['source']['from']['address'];
+    $id = $value['id'];
+    $created_at = $value['created_at'];
+    $updated_at = $value['updated_at'];
+    $subject = $value['subject'];
+    $status = $value['status'];
+    $submitter_id = $value['submitter_id'];
+if(!empty($req_name)) {
+$show_name = $req_name;
+}
+else {
+$show_name = $req_email;
+};
+
+
+if (($status=='open' || $status=='new')&& $x <= 9) {?>
+<tr>
+<td class="col-md-2">
+<?php echo date('Y-m-d h:m', strtotime($created_at));?>
+</td>
+<td class="col-md-2">
+<?php echo $show_name;?>
+</td>
+<td class="col-md-1">
+<?php echo ucfirst($status);?>
+</td>
+<td class="col-md-6">
+<?php echo $subject;?>
+</td>
+<td class="col-md-1">
+<a href="https://sonovate.zendesk.com/agent/tickets/<?php echo $id;?>" class="btn btn-primary btn-xs zendesk" target="_blank">
+View Ticket
+</a>
+</td>
+</tr>
+
+
+
+<?php
+$x++;
+}
+}
+curl_close($ch);
+?>
+
+</tbody>
+</table>
     </div>
-<?php } ?>
-		<!-- MORTGAGES -->
+    <div role="tabpanel" class="tab-pane" id="profile">
+
+        <table class="table table-fixed">
+            <thead>
+                <tr>
+                    <th class="col-md-2">Date</th>
+                    <th class="col-md-2">Raised By</th>
+                    <th class="col-md-1">Status</th>
+                    <th class="col-md-6">Subject</th>
+                    <th class="col-md-1"> </th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+<?php 
+$x = 0;
+foreach ($data['tickets'] as $field => $value) {
+    $req_name = $value['via']['source']['from']['name']; 
+    $req_email = $value['via']['source']['from']['address'];
+    $id = $value['id'];
+    $created_at = $value['created_at'];
+    $updated_at = $value['updated_at'];
+    $subject = $value['subject'];
+    $status = $value['status'];
+        $submitter_id = $value['submitter_id'];
+
+if(!empty($req_name)) {
+
+$show_name = $req_name;
+}
+
+else {
+$show_name = $req_email;
+
+};
+
+if(($status=='closed' || $status=='solved')&& $x <= 9) {?>
+
+
+<tr>
+<td class="col-md-2">
+<?php echo date('Y-m-d h:m', strtotime($created_at));?>
+</td>
+<td class="col-md-2">
+<?php echo $show_name;?>
+</td>
+<td class="col-md-1">
+<?php echo ucfirst($status);?>
+</td>
+<td class="col-md-6">
+<?php echo $subject;?>
+</td>
+<td class="col-md-1" class="pull-right">
+<a href="https://sonovate.zendesk.com/agent/tickets/<?php echo $id;?>" class="btn btn-primary btn-xs zendesk" target="_blank">
+View Ticket
+</a>
+</td>
+</tr>
+
+<?php
+$x++;
+}
+}
+?>
+</tbody>
+</table>
+</div>
+<?php if($ticket_count > 10) {?>
+<div class="alert alert-info" role="alert">Only the ten most recent tickets are displayed here. <a href="https://sonovate.zendesk.com/agent/tickets/<?php echo $id;?>"><b>Visit Zendesk</b></a> to view all tickets.</div>
+
+<?php };?>
+</div>
+
+
+
+
+ 
+
+        </div>
+        <!-- /.panel-body -->
+        </div>
+<?php endif; ?>
+
+
+        	<!-- MORTGAGES -->
 	<div class="col-md-12">
 		<div class="panel panel-default">
 <?php if(!empty($company['mortgages'])): ?>
@@ -1112,11 +1382,11 @@ endif;
                 <strong><span class="sourceRequiredTitle" >Source</span> Required.</strong><br> To add a <span class="sourceRequiredDropDownItem"></span>&#44; please add a <span class="editBoxInstruction">Source</span> to this company.
             </div>
             <div class="row">
-                        <div class="col-sm-4 col-md-4">
+                        <div class="col-sm-4 col-md-2">
                             <div class="form-group ">
                                 <label>New Action</label>
                                 
-                                <select id="action_type_completed" name="action_type_completed" class="form-control" >
+                                <select id="action_type_completed" name="action_type_completed" class="form-control selectpicker" >
                                     <option value="">--- Select an Action ---</option>
                                   
                                     <?php foreach($action_types_done as $action ): 
@@ -1133,7 +1403,28 @@ endif;
                                 
                                
                             </div>
+                                   <div class="col-sm-12">
+
+                <?php foreach($action_types_done as $action ):  
+                                if($action->how_used){
+                                echo '<div class="alert alert-info action_verbiage action_verbiage_text'.str_replace(' ', '',$action->id ).'" >'
+                                    
+                                    
+                                    .$action->how_used.
+                                    
+                                    '</div>';
+                                 
+                                }
+                                endforeach;
+                                ?>
+                </div>
                         </div>
+                
+                
+                <div class="col-xs-10">
+
+
+
                      <div class="col-sm-2 col-md-2 initialfee fee">
                             <div class="form-group ">
                                 <label>Initial Fee<span class="actionrqd">*</span></label>
@@ -1145,13 +1436,11 @@ endif;
                         </div>
                 
                
-                
-
-                        <div class="col-sm-2 col-md-2  onInitialFee onwho onwhocontacthide">
+                        <div class="col-sm-2 col-md-4  onInitialFee onwho onwhocontacthide actionsdefault">
                             <?php if(isset($contacts) and !empty($contacts)) : ?>
                                 <div class="form-group ">
                                     <label>Contact</label>
-                                    <select name="contact_id" class="form-control actionContact">
+                                    <select name="contact_id" class="form-control  actionContact show-tick" >
                                         <option value="">--- Select a Contact ---</option>
                                         <?php foreach($contacts as $contact ): ?>
                                           <option value="<?php echo $contact->id; ?>"><?php echo ucfirst($contact->first_name).' '.ucfirst($contact->last_name); ?></option>
@@ -1160,11 +1449,11 @@ endif;
                                 </div>
                             <?php endif; ?>
                         </div>
-                         <div class="col-sm-2 col-md-2 onInitialFee onwho">
+                         <div class="col-sm-2 col-md-2 onInitialFee onwho actionsdefault">
                             <div class="form-group ">
                                 <label>Follow Up Action</label>
 
-                                <select id="action_type_planned" name="action_type_planned" class="form-control" onchange="dateRequired()">
+                                <select id="action_type_planned" name="action_type_planned" class="form-control selectpicker" onchange="dateRequired()">
                                 <option value="">--- No Follow Up ---</option>
                                     <?php foreach($action_types_planned as $action ): ?>
                                       <option value="<?php echo $action->id; ?>"><?php echo $action->name; ?></option>
@@ -1172,7 +1461,7 @@ endif;
                                 </select>
                             </div>
                         </div>
-                   <div class="col-sm-2 col-md-2 ">
+                   <div class="col-sm-2 col-md-3 actionsdefault">
                          <div class="form-group ">
                                     <label>Who</label>
                                     <select name="who_user_id" id="who_user_id" class="form-control  show-tick" data-live-search="true" data-size="15">
@@ -1193,7 +1482,7 @@ endif;
                                     </select>
                                 </div>
                         </div>
-                        <div class="col-sm-2 col-md-2 followup">
+                        <div class="col-sm-2 col-md-3 followup actionsdefault">
                             <div class="form-group" >
                                 <label>Follow Up Date</label>
                                 <input type="text" class="form-control follow-up-date" id="planned_at" data-date-format="YYYY/MM/DD H:m" name="planned_at" placeholder="">
@@ -1201,22 +1490,8 @@ endif;
                         </div>
                                       
                 
-                <div class="col-sm-4 col-md-4">
-
-                <?php foreach($action_types_done as $action ):  
-                                if($action->how_used){
-                                echo '<div class="alert alert-info action_verbiage action_verbiage_text'.str_replace(' ', '',$action->id ).'" >'
-                                    
-                                    
-                                    .$action->how_used.
-                                    
-                                    '</div>';
-                                 
-                                }
-                                endforeach;
-                                ?>
-                </div>
-                <div class="col-sm-4 col-md-8 alert alert-info action_verbiage action_file_uploader mainUploader">
+         
+                <div class="col-sm-4 col-md-8 alert alert-info action_file_uploader mainUploader">
  
     
                
@@ -1237,18 +1512,161 @@ endif;
  
  
 </div><!-- /.row -->
+
                 
-                        
+                
+<!-- ADJUSTMENTS   -->
+                <div class="adjcont1">
+             <div class="col-sm-8 adjustmentSelectordefault">
+                <div class="form-group">
+                        <label>Adjustment</label>
+                        <select  name="adjustment_type_id" class="form-control adjustmentSelector selectpicker dropup" title="Choose one of the following..."  data="1">
+                            <option value="1">Charge Only</option>
+                            <option value="2">Pay &amp; Charge</option>
+                            <option value="3">Client VAT Adjustment</option>
+                            <option value="4">Pay Rate Adjustment</option>
+                            <option value="5">Agency VAT Adjustment</option>
+                            <option value="6">Contractor VAT Adjustment</option>
+                            <option value="7">Change of Supplier</option>
+                        </select>
+                </div>
+            </div>
+                 
+             <div class="col-sm-4 adjustmentSelectordefault">
+                <div class="form-group">
+                      <label>Status</label>
+                        <select class="form-control selectpicker"  disabled placeholder="Adjustment">
+                            <option ="0">Open</option>
+                            <option ="1">Close</option>
+                        </select>
+
+                </div>
+             </div> 
+        
+              <!-- CHARGE ONLY -->
+                    
+             <div class="col-sm-4 adj group1">
+                <div class="form-group">
+                     <label>Client Name<span class="">*</span></label>
+                    <input name="cc_name" type="text" class="form-control selectpicker rqd_group1 name" id="name" placeholder="Client name">
+                </div>
+             </div> 
+                     <div class="col-sm-5 adj group2">
+                <div class="form-group">
+                     <label>Candidate<span class="">*</span></label>
+                    <input type="text" class="form-control selectpicker candidate rqd_group2 candidate_adjustment" name="candidate" id="pra_candidate_adjustment" placeholder="Candidiate name">
+                </div>
+             </div> 
+            
+                    
+                      <div class="col-sm-5 adj group2">
+                <div class="form-group">
+                     <label>Client<span class="">*</span></label>
+                    <input type="text" class="form-control selectpicker client rqd_group2 client_adjustment" id="f_client" name="f_client" placeholder="Client name">
+                </div>
+             </div>
+                    
+                    
+            <div class="col-sm-4 adj group1">
+                <div class="form-group">
+                     <label>Invoice number<span class="">*</span></label>
+                    <input type="number" name="invoice_id"   class="form-control  invoice_number" id="invoice_id" placeholder="Invoice number">
+                </div>
+            </div>   
+                   <div class="col-sm-4 adj group1">
+                <div class="form-group">
+                     <label>Remittance number<span class="">*</span></label>
+                    <input type="number"   name="remittance_id" class="form-control  remittance_number" id="remittance_id" placeholder="Remittance number">
+                </div>
+             </div>   
+                                        
+            <div class="col-sm-2 adj group2">
+                <div class="form-group">
+                     <label>Week Ending<span class="">*</span></label>
+                    <input type="text" class="form-control  weekending weekending rqd_group2" id="weekending" name="weekending" data-date-format="DD/MM/YYYY" placeholder="Select date">
+                </div>
+             </div> 
+                    
+           
+                  
+            <!-- CHARGE ONLY END-->
+                
+            <!-- PAY & CHARGE -->  
+                     <div class="col-sm-4 adj group_default">
+                <div class="form-group">
+                     <label>Currency<span class="">*</span></label>
+                </div>
+                <div class="form-group" style="margin-top:-12px">
+                        <label class="radio-inline"><input  name="currency" class="selectpicker  client_currency rqd_group_default" type="radio" checked="checked" value="GBP"> Sterling</label>
+                        <label class="radio-inline"><input  name="currency" class="selectpicker  client_currency rqd_group_default" type="radio" value="EUR"> Euros</label>
+                        <label class="radio-inline "><input  name="currency" class="selectpicker client_currency rqd_group_default" type="radio" value="USD"> Dollars</label>
+                </div>
+            </div>
+             <div class="col-sm-4 adj group_default">
+                <div class="form-group">
+                     <label>Amount of Adjustment<span class="">*</span></label>
+                    <input type="number" name="adjustment_amount" class="form-control adjustment_amount rqd_group2" id="adjustment_amount" placeholder="Adjustment amount">
+                </div>
+            </div>  
+           
+            <!-- PAY & CHARGE  END-->
+                
+            <!-- CLIENT VAT ADJUSTMENT -->
+                    
+         
+                    
+            <!-- CLIENT VAT ADJUSTMENT END-->
+
+            <!-- PAYMENT RATE ADJUSTMENT     $(this).parent().parent().remove(); -->
                    
+            
+
+  
+             
+
+                
+            <!-- PAYMENT RATE ADJUSTMENT END-->
+
+            <!-- AGENCY VAT ADJUSTMENT-->
+                    
+           
+            <!-- AGENCY VAT ADJUSTMENT END-->
+
+            <!-- CONTRACTOR VAT ADJUSTMENT -->
+                       
+             <div class="col-sm-3 adj group_default">
+                <div class="form-group">
+                     <label>Reason<span class="">*</span></label>
+                    <select class="form-control selectpicker contractvatreason adjrqd6 reason" name="reason"  title="Select a reason..." data="1">
+                            <option value="">--- Select a Reason ---</option>                           
+                            <option value="1">Agency provided incorrect information (e.g. rates)</option>
+                            <option value="2">Placement error</option>
+                            <option value="3">Timesheet error</option>
+                            <option value="4">Credit Control - incorrect adjustment</option>
+                            <option value="5">Credit Control - customer billing incorrect</option>
+                            <option value="6">Other</option> 
+                    </select>
+                </div>
+             </div>
+                    
+                     <div class="col-sm-12 adj group_default">
+                <div class="form-group">
+                     <label>Details of Change<span class="">*</span></label>
+                    <textarea type="text" name="change_details" class="form-control selectpicker rqd_group_default change_details" id="change_details" placeholder="Change details"></textarea>
+                </div>
+             </div>
+                    
+                    
+                    
+                    
+            <!-- CONTRACTOR VAT ADJUSTMENT END-->
+                
+<!-- ///////////// ADJUSTMENTS END ////////////// -->   
+             
       <!--file rows -->
                 
                 <div id="addActionMultipleFileFields"></div>
                   
-                   
-                                  
-                </div>
-                   
-                 
                 <?php if ($current_user['permission'] == 'admin' || $current_user['permission'] == 'data' || $current_user['permission'] == 'uf'): ?>
 
                 <div class="col-sm-4  initialfee">
@@ -1269,11 +1687,25 @@ endif;
              
             </div>
         </div>
-    </div>
+                    
+                    
+                </div>      
+                    
+   
 
                  <?php endif; ?>
+              
+              
+              
+              
+              
+              
+               
+
                 
-                        <div class="">
+                        <div class="col-md-12">
+                            
+                  
                             <div class="form-group addActionOutcome">
                                  
                                 <label>Comment<span class="actionEvalPipeline"style=" color: red;">*</span></label>
@@ -1359,7 +1791,7 @@ endif;
                         <?php echo form_close(); ?>
 </div>
 		  </div>
-		</div>
+		</div> </div>
 		</div>
        
           <div class="col-md-12 child" id="stickMenu" ><div>
@@ -1639,4 +2071,4 @@ function closeNav() {
 
 </script>
  
-<?php endif; //active or not end ?>
+ 

@@ -3168,7 +3168,7 @@ cursor:pointer;
 
 .action_verbiage{
     margin-top: 9px;
-    height: 50px;
+    height: auto;
     margin-bottom: 5px;
 }
 .fade .modal-content{
@@ -3502,6 +3502,15 @@ margin-right: 3px;
     
   margin-top:15px;  
     
+}
+.adj,.adjustmentSelectordefault{
+    
+   display:none;
+}
+
+
+  .adjcontactions .group2{
+display:none;
 }
 /*! Hint.css - v2.2.1 - 2016-03-26 //#2b4461
 * http://kushagragour.in/lab/hint/
