@@ -365,5 +365,18 @@ print '<pre>'; print_r($data); print '</pre>';
         
         
     }
+    
+    
+function googleapitest(){
+    
+  $op  =       $this->data['tagssummary'] = $this->Tagging_model->get_tagging_stats();
+    
+    
+    //echo '<pre>'; 
+    //echo print_r($op); 
+    
+     //echo '</pre>';
+    echo json_encode($op);
+}
 
 }

@@ -18,7 +18,7 @@ $sql = "select
        U.image,
        count(CASE when CT.created_at >= current_date - 7 then 1 END) \"7days\",
      count(CASE when CT.created_at >= current_date - 30 then 1 END) \"30days\",
-     count(CASE when CT.created_at >= current_date - 100 then 1 END) \"100days\",
+     count(CASE when CT.created_at >= current_date - 100 then 1 END) \"days\",
      min(current_date - CT.created_at::date) \"lasttag\"
  
 from COMPANY_TAGS CT
@@ -33,7 +33,7 @@ and U.eff_to is null
 
 group by 1,2
 
-order by 3 desc,1 desc";
+order by 5 desc,1 desc";
     $query = $this->db->query($sql);
     return $query->result_array();
 }
