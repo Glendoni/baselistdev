@@ -1309,20 +1309,25 @@ foreach($bsp as $ky=>$value){
     
     
     
-    function sector_note_update(){
-        $output = $this->input->post(); // need to clean with validation
-        
-     $this->Companies_model->add_services_level_notes($output,$this->get_current_user_id());
-        
-       // echo $this->get_current_user_id();
-       // echo '<pre>'; print_r($output); echo '</pre>';
-        
-        
-        echo json_encode(array('id' => $output['noteid']));
+    function sector_note_update()
+    {
+      
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('notes', 'notes', 'xss_clean|required');
+        $this->form_validation->set_rules('noteid', 'noteid', 'xss_clean|required');
+
+        if($this->form_validation->run())
+        {
+           $output = $this->input->post(); // need to clean with validation
+           $this->Companies_model->add_services_level_notes($output,$this->get_current_user_id());
+        // echo $this->get_current_user_id();
+        // echo '<pre>'; print_r($output); echo '</pre>';
+           echo json_encode(array('id' => $output['noteid']));
+        }
     }
     
     
-    function sector_test(){
+    function sector_test(){ //remove whenever
         
         
         $output =  array

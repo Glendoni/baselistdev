@@ -648,14 +648,6 @@ if ($your_date < $now){;
                   
                 
                 
-                    <?php }else{
-        
-        echo '<div class="alert alert-info">
-<p style="text-align:center;">No Services Applicable </p>
-</div>'
-;
-        
-    } ?>
       
                 
                 
@@ -813,6 +805,17 @@ font-size: 1em;
             </div>
             </div>
             </div>
+                
+                
+                              <?php }else{
+        
+        echo '<div class="alert alert-info">
+<p style="text-align:center;">No Services Applicable </p>
+</div>'
+;
+        
+    } ?>
+      
     
             </div>
         <!-- /.panel-body -->

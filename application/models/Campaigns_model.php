@@ -827,7 +827,15 @@ $sql = 'select json_agg(results)
 			   UC.name, --f42
 			   UU.name, --f43
                C.initial_rate, --f44
-                C.customer_to --f45
+             C.customer_to,--f45
+               AM.name, --f46
+			   C.confidential_flag, -- f47
+               C.permanent_funding, -- f48
+               C.staff_payroll, -- f49
+               C.management_accounts, -- f50
+               C.paye, -- f51
+               C.permanent_invoicing -- f52
+               
 			   )) "JSON output" 
 			  
 		from (select * from companies where active = \'t\') C  
@@ -971,6 +979,12 @@ $sql = 'select json_agg(results)
 				 
 		group by C.id,
 		         C.name,
+                 C.confidential_flag,
+                 C.permanent_funding, 
+                 C.staff_payroll, 
+                 C.management_accounts,
+                 C.paye, 
+                 C.permanent_invoicing, 
 		         C.url,
 			     C.eff_from,
 			     C.linkedin_id,
