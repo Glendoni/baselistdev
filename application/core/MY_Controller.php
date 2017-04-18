@@ -1,4 +1,5 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php header( 'X-Frame-Options: SAMEORIGIN' );
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class MY_Controller extends CI_Controller {
 	protected $current_user = ""; // Logged in user

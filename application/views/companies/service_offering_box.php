@@ -96,7 +96,7 @@
                 ?>
 
                     <span class="button-checkbox bespoke_checkbox">
-                    <button type="button" id="bespoke_checkbox" class="btn btn-checkbox checkbox_bespoke" data-color="success" >&nbsp;<?php echo ucwords(strtolower($value)); ?></button>
+                    <button type="button" id="bespoke_checkbox" class="btn btn-checkbox checkbox_bespoke" data-color="success" >&nbsp;<?php echo   $value; ?></button>
                     <input type="checkbox" name="add_sectors[]" value="<?php echo $key; ?>" class="hidden" <?php echo (isset($company['sectors']) and array_key_exists($key,$company['sectors']))? 'checked': '' ; ?>  />
                     </span>
 

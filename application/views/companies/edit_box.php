@@ -133,7 +133,7 @@
               <!-- EFFECTIVE FROM -->
             
             
-                                <?php if($deals_pipline->eff_from){ ?>
+                                <?php /* if($deals_pipline->eff_from){ ?>
 
                                         <div class="col-sm-6 col-md-3 pipeline_text"  > 
 
@@ -165,7 +165,7 @@
                                             </div>
                                         </div>
 
-                                <?php } ?>
+                                <?php }  */?>
                                 
                                 
              <?php /*
