@@ -11,16 +11,17 @@ class Zendesk extends MY_Controller {
 
   function get_tickets()
   {
-      $zd_id = $this->input->get('zd_id'); 
-      $zd_id = $this->input->get('zd_id'); 
-      $response  = sonovate_zendesk($zd_id, false, false,'get_all_tickets_regarding_a_specific_user');
-      $response =   json_decode($response);
+       
+      $zd_id = $this->input->get('zd_id');
+      $responsea  = sonovate_zendesk($zd_id, false, false,'get_all_tickets_regarding_a_specific_user');
+      $response =   json_decode($responsea);
+      $responsed[] = $response->tickets;
       $rounded  = ceil( $response->count / 100 ) * 100;
         $s=$rounded/100;
       
       for ($x = 0; $x <= $s; $x++) {
            
-          if($x >=1){
+          if($x >=2){
              
                  $responser  = sonovate_zendesk($zd_id, false, false,'get_all_tickets_regarding_a_specific_user' , false,$x);
               
@@ -28,8 +29,6 @@ class Zendesk extends MY_Controller {
                    $responsed[] =  $responser->tickets;
                     $responser = false;
           }
-          
-         
       }
 
       echo json_encode(array('tickets' => $responsed));
