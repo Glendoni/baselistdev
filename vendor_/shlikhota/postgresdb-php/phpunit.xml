@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         syntaxCheck="true"
+         verbose="true"
+>
+    <testsuites>
+        <testsuite name="Basic">
+            <file>tests/BasicTest.php</file>
+            <file>tests/SelectQueriesTest.php</file>
+            <file>tests/AdditionalTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -88,7 +88,7 @@
         <!-- Navigation -->
 <!--<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">--> 
  <?php  $stag_distinct = ''; if (ENVIRONMENT  =='staging'){ $stag_distinct = "background:#2eaf09;"; }?>
- <?php  if (ENVIRONMENT  =='development'){ $stag_distinct = "background:#af1c09;"; }?>
+ <?php  if (ENVIRONMENT  =='development'){ $stag_distinct = "background:#099caf;"; }?>
         
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0; <?php echo $stag_distinct; ?>">
 <!-- Brand and toggle get grouped for better mobile display -->
