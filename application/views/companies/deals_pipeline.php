@@ -34,14 +34,14 @@ function  dragg(str){
 <div  class="mainboxs " style="overflow: hidden; margin-top: 0px;">
 <div  class="column delete" placement="delete" aria-hidden="true"></div>
 
-    <!--<div class="row ">
+    <div class="row ">
         <div class="col-md-2">
         </div>
         <div class="col-md-8">
             <h2 class="company-header">Deals Forecast</h2>
         </div>
         <div class="col-md-2"></div>
-    </div>-->
+    </div> 
     <div class="row" style="margin-top:20px;">
         <div class="col-md-12">
             <div id="pipeline_labels"></div>

@@ -1881,7 +1881,8 @@ var h = minutes > 52 ? (hours === 23 ? 0 : ++hours) : hours;
 //////////////Controls pipline pick date
 var d = new Date();
 var n = d.getMonth();
-d.setMonth(d.getMonth()+(11-n));   //change retruned months here
+console.log(12-n);
+d.setMonth(d.getMonth()+(13-n));   //change retruned months here
 var   montheval =""+d.getMonth()+"" ;
 montheval =  montheval.substr(1, 1) ? d.getMonth() : '0'+d.getMonth() ;
 monthevalconcat = d.getFullYear()+"-"+(montheval)+"-01";
